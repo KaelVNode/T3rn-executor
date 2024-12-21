@@ -6,6 +6,7 @@ wget https://raw.githubusercontent.com/KaelVNode/T3rn-executor/refs/heads/main/S
 Buat akun dan ambil RPC di https://www.alchemy.com/
 
 siapkan wallet isi dengan 
+
 ETH OP Sepolia
 
 ETH Arb Sepolia

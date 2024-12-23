@@ -34,9 +34,9 @@ case $pilihan in
     rm -rf executor
 
     # Mengunduh versi terbaru dari executor dan mengekstraknya
-    curl -L -o executor-linux-v0.30.0.tar.gz https://github.com/t3rn/executor-release/releases/download/v0.30.0/executor-linux-v0.30.0.tar.gz && \
-    tar -xzvf executor-linux-v0.30.0.tar.gz && \
-    rm -f executor-linux-v0.30.0.tar.gz
+    curl -L -o executor-linux-v0.31.0.tar.gz https://github.com/t3rn/executor-release/releases/download/v0.31.0/executor-linux-v0.31.0.tar.gz && \
+    tar -xzvf executor-linux-v0.31.0.tar.gz && \
+    rm -f executor-linux-v0.31.0.tar.gz
 
     # Masuk ke direktori bin untuk menyiapkan eksekutor
     cd executor/executor/bin

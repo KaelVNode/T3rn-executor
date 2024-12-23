@@ -63,6 +63,12 @@ while true; do
         exit 1
       fi
 
+      # Mengecek apakah file sudah diunduh
+      if [ ! -f executor-linux-v0.31.0.tar.gz ]; then
+        echo "File executor-linux-v0.31.0.tar.gz tidak ditemukan!"
+        exit 1
+      fi
+
       tar -xzvf executor-linux-v0.31.0.tar.gz
       if [ $? -ne 0 ]; then
         echo "Gagal mengekstrak file"
@@ -75,8 +81,8 @@ while true; do
 
       # Mengaktifkan dan memulai layanan t3rn-executor
       sudo systemctl daemon-reload
-      sudo systemctl enable t3rn-executor.service
-      sudo systemctl restart t3rn-executor.service
+      sudo systemctl stop t3rn-executor.service
+      sudo systemctl start t3rn-executor.service
       if [ $? -ne 0 ]; then
         echo "Gagal memulai layanan t3rn-executor"
         exit 1
@@ -116,8 +122,8 @@ while true; do
 
       # Reload daemon dan restart service
       sudo systemctl daemon-reload
-      sudo systemctl enable t3rn-executor.service
-      sudo systemctl restart t3rn-executor.service
+      sudo systemctl stop t3rn-executor.service
+      sudo systemctl start t3rn-executor.service
       if [ $? -ne 0 ]; then
         echo "Gagal memulai layanan t3rn-executor setelah perubahan gas fee"
         exit 1
@@ -131,12 +137,13 @@ while true; do
       exit 0  # Keluar dari skrip jika memilih opsi 4
       ;;
     *)
-      echo "Pilihan tidak valid!"
-      exit 1  # Keluar dengan status 1 jika pilihan tidak valid
+      echo "Pilihan tidak valid! Kembali ke menu..."
+      continue  # Kembali ke menu jika pilihan tidak valid
       ;;
   esac
 
   # Menghapus skrip updateExe.sh setelah memilih pilihan apapun
+  # (Dihapus setelah update selesai)
   rm -rf updateExe.sh
   if [ $? -ne 0 ]; then
     echo "Gagal menghapus skrip updateExe.sh"

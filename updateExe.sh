@@ -81,6 +81,7 @@ while true; do
 
       # Mengaktifkan dan memulai layanan t3rn-executor
       sudo systemctl daemon-reload
+      sudo systemctl enable t3rn-executor.service
       sudo systemctl stop t3rn-executor.service
       sudo systemctl start t3rn-executor.service
       if [ $? -ne 0 ]; then
@@ -122,6 +123,7 @@ while true; do
 
       # Reload daemon dan restart service
       sudo systemctl daemon-reload
+      sudo systemctl enable t3rn-executor.service
       sudo systemctl stop t3rn-executor.service
       sudo systemctl start t3rn-executor.service
       if [ $? -ne 0 ]; then

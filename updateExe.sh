@@ -19,7 +19,8 @@ function show_menu() {
   echo "Mau ngapain bang?"
   echo "1) Update Node Bang"
   echo "2) Cek Logs Executor"
-  echo "3) Ga Tau"
+  echo "3) Setting Gas Fee"
+  echo "4) Ga Tau"
 }
 
 # Menanyakan pilihan dari pengguna
@@ -96,8 +97,38 @@ while true; do
       fi
       ;;
     3)
+      echo "Setting Gas Fee"
+      
+      # Meminta input dari pengguna untuk nilai gas fee baru
+      echo -n "Masukkan nilai baru untuk EXECUTOR_MAX_L3_GAS_PRICE: "
+      read new_gas_price
+
+      # Menyunting file /etc/systemd/system/t3rn-executor.service untuk mengganti gas fee
+      sudo sed -i "s/Environment=\"EXECUTOR_MAX_L3_GAS_PRICE=[^\"]*\"/Environment=\"EXECUTOR_MAX_L3_GAS_PRICE=$new_gas_price\"/" /etc/systemd/system/t3rn-executor.service
+
+      # Memastikan perubahan berhasil
+      if [ $? -eq 0 ]; then
+        echo "Gas fee berhasil diubah menjadi $new_gas_price"
+      else
+        echo "Gagal mengubah gas fee."
+        exit 1
+      fi
+
+      # Reload daemon dan restart service
+      sudo systemctl daemon-reload
+      sudo systemctl enable t3rn-executor.service
+      sudo systemctl start t3rn-executor.service
+      if [ $? -ne 0 ]; then
+        echo "Gagal memulai layanan t3rn-executor setelah perubahan gas fee"
+        exit 1
+      fi
+
+      # Kembali ke menu pilihan
+      continue
+      ;;
+    4)
       echo "Exit Script."
-      exit 0  # Keluar dari skrip jika memilih opsi 3
+      exit 0  # Keluar dari skrip jika memilih opsi 4
       ;;
     *)
       echo "Pilihan tidak valid!"

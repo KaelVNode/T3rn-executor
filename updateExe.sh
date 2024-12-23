@@ -76,7 +76,7 @@ while true; do
       # Mengaktifkan dan memulai layanan t3rn-executor
       sudo systemctl daemon-reload
       sudo systemctl enable t3rn-executor.service
-      sudo systemctl start t3rn-executor.service
+      sudo systemctl restart t3rn-executor.service
       if [ $? -ne 0 ]; then
         echo "Gagal memulai layanan t3rn-executor"
         exit 1
@@ -117,7 +117,7 @@ while true; do
       # Reload daemon dan restart service
       sudo systemctl daemon-reload
       sudo systemctl enable t3rn-executor.service
-      sudo systemctl start t3rn-executor.service
+      sudo systemctl restart t3rn-executor.service
       if [ $? -ne 0 ]; then
         echo "Gagal memulai layanan t3rn-executor setelah perubahan gas fee"
         exit 1

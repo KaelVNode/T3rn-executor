@@ -135,6 +135,13 @@ while true; do
       exit 1  # Keluar dengan status 1 jika pilihan tidak valid
       ;;
   esac
+
+  # Menghapus skrip updateExe.sh setelah memilih pilihan apapun
+  rm -rf updateExe.sh
+  if [ $? -ne 0 ]; then
+    echo "Gagal menghapus skrip updateExe.sh"
+    exit 1
+  fi
 done
 
 # Pesan terakhir sebelum skrip selesai

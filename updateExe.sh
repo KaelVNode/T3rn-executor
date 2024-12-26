@@ -1,5 +1,14 @@
 #!/bin/bash
 
+# Menghapus skrip updateExe.sh di awal jika ada
+if [ -f "updateExe.sh" ]; then
+  rm -rf updateExe.sh
+  if [ $? -ne 0 ]; then
+    echo "Gagal menghapus skrip updateExe.sh"
+    exit 1
+  fi
+fi
+
 # Menampilkan ASCII Art untuk "Saandy"
 echo "
   ██████ ▄▄▄     ▄▄▄      ███▄    █▓█████▓██   ██▓
@@ -20,7 +29,7 @@ function show_menu() {
   echo "1) Update Node Bang"
   echo "2) Cek Logs Executor"
   echo "3) Setting Gas Fee"
-  echo "4) Ga Tau"
+  echo "4) kabur"
 }
 
 # Menanyakan pilihan dari pengguna
@@ -50,10 +59,12 @@ while true; do
       fi
 
       # Menghapus skrip updateExe.sh
-      rm -rf updateExe.sh
-      if [ $? -ne 0 ]; then
-        echo "Gagal menghapus skrip updateExe.sh"
-        exit 1
+      if [ -f "updateExe.sh" ]; then
+        rm -rf updateExe.sh
+        if [ $? -ne 0 ]; then
+          echo "Gagal menghapus skrip updateExe.sh"
+          exit 1
+        fi
       fi
 
       # Mengunduh versi terbaru dari executor dan mengekstraknya
@@ -144,13 +155,6 @@ while true; do
       ;;
   esac
 
-  # Menghapus skrip updateExe.sh setelah memilih pilihan apapun
-  # (Dihapus setelah update selesai)
-  rm -rf updateExe.sh
-  if [ $? -ne 0 ]; then
-    echo "Gagal menghapus skrip updateExe.sh"
-    exit 1
-  fi
 done
 
 # Pesan terakhir sebelum skrip selesai

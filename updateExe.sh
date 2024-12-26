@@ -20,7 +20,7 @@ function show_menu() {
   echo "1) Update Node Bang"
   echo "2) Cek Logs Executor"
   echo "3) Setting Gas Fee"
-  echo "4) Ga Tau"
+  echo "4) Menghapus file updateExe.sh dan file terkait setelah skrip selesai"
 }
 
 # Menanyakan pilihan dari pengguna
@@ -134,8 +134,15 @@ while true; do
       continue
       ;;
     4)
-      echo "Exit Script."
-      exit 0  # Keluar dari skrip jika memilih opsi 4
+      # Menghapus file updateExe.sh dan file terkait setelah skrip selesai
+      echo "Menghapus file updateExe.sh dan file terkait setelah skrip selesai..."
+      rm -f updateExe.sh updateExe.sh.[0-9]*
+      if [ $? -ne 0 ]; then
+        echo "Gagal menghapus file updateExe.sh atau file terkait."
+        exit 1
+      fi
+      echo "File updateExe.sh dan file terkait berhasil dihapus."
+      exit 0  # Keluar dari skrip setelah penghapusan selesai
       ;;
     *)
       echo "Pilihan tidak valid! Kembali ke menu..."
@@ -144,14 +151,6 @@ while true; do
   esac
 
 done
-
-# Menghapus file updateExe.sh dan file terkait setelah skrip selesai
-echo "Menghapus file updateExe.sh dan file terkait setelah skrip selesai..."
-rm -f updateExe.sh updateExe.sh.[0-9]*
-if [ $? -ne 0 ]; then
-  echo "Gagal menghapus file updateExe.sh atau file terkait."
-  exit 1
-fi
 
 # Pesan terakhir sebelum skrip selesai
 echo "Dah ya, mo tidur"

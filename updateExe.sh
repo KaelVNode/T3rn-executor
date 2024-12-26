@@ -20,7 +20,7 @@ function show_menu() {
   echo "1) Update Node Bang"
   echo "2) Cek Logs Executor"
   echo "3) Setting Gas Fee"
-  echo "4) Menghapus file updateExe.sh dan file terkait setelah skrip selesai"
+  echo "4) exit"
 }
 
 # Menanyakan pilihan dari pengguna

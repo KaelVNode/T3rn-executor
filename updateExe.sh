@@ -1,13 +1,5 @@
 #!/bin/bash
 
-# Menghapus file updateExe.sh dan file lain yang memiliki nama serupa (updateExe.sh.1, updateExe.sh.2, dst.) sebelum melanjutkan
-echo "Menghapus file updateExe.sh dan file terkait..."
-rm -f updateExe.sh updateExe.sh.[0-9]*
-if [ $? -ne 0 ]; then
-  echo "Gagal menghapus file updateExe.sh atau file terkait."
-  exit 1
-fi
-
 # Menampilkan ASCII Art untuk "Saandy"
 echo "
   ██████ ▄▄▄     ▄▄▄      ███▄    █▓█████▓██   ██▓

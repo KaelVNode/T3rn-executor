@@ -20,7 +20,8 @@ function show_menu() {
   echo "1) Update Node Bang"
   echo "2) Cek Logs Executor"
   echo "3) Setting Gas Fee"
-  echo "4) exit"
+  echo "4) Hapus Node"
+  echo "5) exit"
 }
 
 # Menanyakan pilihan dari pengguna
@@ -92,6 +93,7 @@ while true; do
       echo "Update selesai!"
       continue
       ;;
+
     2)
       echo "Menampilkan logs t3rn-executor..."
       
@@ -102,6 +104,7 @@ while true; do
         exit 1
       fi
       ;;
+
     3)
       echo "Setting Gas Fee"
       
@@ -133,17 +136,49 @@ while true; do
       # Kembali ke menu pilihan
       continue
       ;;
+
     4)
-      # Menghapus file updateExe.sh dan file terkait setelah skrip selesai
-      echo "Menghapus file updateExe.sh dan file terkait setelah skrip selesai..."
+      echo "Hapus Node"
+
+      # Menghentikan layanan t3rn-executor sebelum menghapus
+      sudo systemctl stop t3rn-executor.service
+      if [ $? -ne 0 ]; then
+        echo "Gagal menghentikan layanan t3rn-executor"
+        exit 1
+      fi
+
+      # Menghapus folder executor
+      rm -rf /path/to/executor  # Pastikan path ke executor benar
+      if [ $? -ne 0 ]; then
+        echo "Gagal menghapus folder executor"
+        exit 1
+      fi
+
+      # Menghapus layanan systemd
+      sudo systemctl disable t3rn-executor.service
+      sudo rm -f /etc/systemd/system/t3rn-executor.service
+      if [ $? -ne 0 ]; then
+        echo "Gagal menghapus layanan systemd"
+        exit 1
+      fi
+
+      # Menghapus skrip terkait jika ada
       rm -f updateExe.sh updateExe.sh.[0-9]*
       if [ $? -ne 0 ]; then
         echo "Gagal menghapus file updateExe.sh atau file terkait."
         exit 1
       fi
-      echo "File updateExe.sh dan file terkait berhasil dihapus."
-      exit 0  # Keluar dari skrip setelah penghapusan selesai
+
+      echo "Node telah berhasil dihapus!"
+      continue
       ;;
+
+    5)
+      # Keluar dari script
+      echo "Keluar dari skrip..."
+      exit 0
+      ;;
+
     *)
       echo "Pilihan tidak valid! Kembali ke menu..."
       continue  # Kembali ke menu jika pilihan tidak valid

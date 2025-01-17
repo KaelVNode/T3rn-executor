@@ -49,32 +49,25 @@ while true; do
         exit 1
       fi
 
-      # Menghapus skrip updateExe.sh
-      rm updateExe.sh
-      if [ $? -ne 0 ]; then
-        echo "Gagal menghapus skrip updateExe.sh"
-        exit 1
-      fi
-
       # Mengunduh versi terbaru dari executor dan mengekstraknya
-      curl -L -o executor-linux-v0.35.0.tar.gz https://github.com/t3rn/executor-release/releases/download/v0.35.0/executor-linux-v0.35.0.tar.gz
+      curl -L -o executor-linux-v0.36.0.tar.gz https://github.com/t3rn/executor-release/releases/download/v0.36.0/executor-linux-v0.36.0.tar.gz
       if [ $? -ne 0 ]; then
         echo "Gagal mengunduh file executor"
         exit 1
       fi
 
       # Mengecek apakah file sudah diunduh
-      if [ ! -f executor-linux-v0.35.0.tar.gz ]; then
-        echo "File executor-linux-v0.35.0.tar.gz tidak ditemukan!"
+      if [ ! -f executor-linux-v0.36.0.tar.gz ]; then
+        echo "File executor-linux-v0.36.0.tar.gz tidak ditemukan!"
         exit 1
       fi
 
-      tar -xzvf executor-linux-v0.35.0.tar.gz
+      tar -xzvf executor-linux-v0.36.0.tar.gz
       if [ $? -ne 0 ]; then
         echo "Gagal mengekstrak file"
         exit 1
       fi
-      rm -f executor-linux-v0.35.0.tar.gz
+      rm -f executor-linux-v0.36.0.tar.gz
 
       # Masuk ke direktori bin untuk menyiapkan eksekutor
       cd executor/executor/bin
@@ -162,18 +155,18 @@ while true; do
         exit 1
       fi
 
-      # Menghapus skrip terkait jika ada
-      rm -f updateExe.sh updateExe.sh.[0-9]*
-      if [ $? -ne 0 ]; then
-        echo "Gagal menghapus file updateExe.sh atau file terkait."
-        exit 1
-      fi
-
       echo "Node telah berhasil dihapus!"
       continue
       ;;
 
     5)
+      # Menghapus skrip updateExe.sh
+      rm updateExe.sh
+      if [ $? -ne 0 ]; then
+        echo "Gagal menghapus skrip updateExe.sh"
+        exit 1
+      fi
+
       # Keluar dari script
       echo "Keluar dari skrip..."
       exit 0

@@ -50,19 +50,19 @@ while true; do
       fi
 
       # Mengunduh versi terbaru dari executor dan mengekstraknya
-      curl -L -o executor-linux-v0.41.0.tar.gz https://github.com/t3rn/executor-release/releases/download/v0.41.0/executor-linux-v0.41.0.tar.gz
+      curl -L -o executor-linux-v0.42.0.tar.gz https://github.com/t3rn/executor-release/releases/download/v0.42.0/executor-linux-v0.42.0.tar.gz
       if [ $? -ne 0 ]; then
         echo "Gagal mengunduh file executor"
         exit 1
       fi
 
       # Mengecek apakah file sudah diunduh
-      if [ ! -f executor-linux-v0.41.0.tar.gz ]; then
-        echo "File executor-linux-v0.41.0.tar.gz tidak ditemukan!"
+      if [ ! -f executor-linux-v0.42.0.tar.gz ]; then
+        echo "File executor-linux-v0.42.0.tar.gz tidak ditemukan!"
         exit 1
       fi
 
-      tar -xzvf executor-linux-v0.41.0.tar.gz
+      tar -xzvf executor-linux-v0.42.0.tar.gz
       if [ $? -ne 0 ]; then
         echo "Gagal mengekstrak file"
         exit 1

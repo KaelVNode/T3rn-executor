@@ -15,7 +15,6 @@ echo "
 "
 
 function update_node() {
-  # Minta pengguna memasukkan versi
   echo -n "Masukkan versi executor yang ingin diunduh (contoh: 0.42.0): "
   read VERSION
 
@@ -64,8 +63,8 @@ function check_logs() {
 while true; do
   echo ""
   echo "Pilih opsi:"
-  echo "1. Update Node (t3rn-executor)"
-  echo "2. Cek Logs Layanan (t3rn-executor)"
+  echo "1. Update Node"
+  echo "2. Cek Logs Layanan"
   echo "3. Keluar"
   echo -n "Masukkan pilihan Anda (1/2/3): "
   read CHOICE

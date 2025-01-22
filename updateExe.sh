@@ -77,7 +77,7 @@ while true; do
       check_logs
       ;;
     3)
-      echo "Keluar dari skrip. Sampai jumpa!"
+      echo "Keluar dari skrip. the way to get started is to quit talking and begin doing !"
       exit 0
       ;;
     *)

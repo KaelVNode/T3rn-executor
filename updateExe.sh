@@ -14,171 +14,75 @@ echo "
                                     ░     ░ ░     
 "
 
-# Fungsi untuk menampilkan menu pilihan
-function show_menu() {
-  echo "Mau ngapain bang?"
-  echo "1) Update Node Bang"
-  echo "2) Cek Logs Executor"
-  echo "3) Setting Gas Fee"
-  echo "4) Hapus Node"
-  echo "5) exit"
+function update_node() {
+  # Minta pengguna memasukkan versi
+  echo -n "Masukkan versi executor yang ingin diunduh (contoh: 0.42.0): "
+  read VERSION
+
+  if [ -z "$VERSION" ]; then
+    echo "Versi tidak boleh kosong!"
+    exit 1
+  fi
+
+  EXECUTOR_URL="https://github.com/t3rn/executor-release/releases/download/v${VERSION}/executor-linux-v${VERSION}.tar.gz"
+  EXECUTOR_FILE="executor-linux-v${VERSION}.tar.gz"
+
+  echo "Menghentikan layanan t3rn-executor sebelumnya (jika ada)..."
+  sudo systemctl stop t3rn-executor.service || echo "Layanan t3rn-executor tidak berjalan."
+
+  echo "Menghapus folder executor lama..."
+  rm -rf executor || { echo "Gagal menghapus folder executor"; exit 1; }
+
+  echo "Mengunduh versi ${VERSION} dari executor..."
+  curl -L -o "$EXECUTOR_FILE" "$EXECUTOR_URL"
+  if [ ! -f "$EXECUTOR_FILE" ]; then
+    echo "File ${EXECUTOR_FILE} tidak ditemukan!"
+    exit 1
+  fi
+
+  echo "Mengekstrak file executor..."
+  tar -xzvf "$EXECUTOR_FILE" || { echo "Gagal mengekstrak file"; exit 1; }
+  rm -f "$EXECUTOR_FILE"
+
+  echo "Menyiapkan direktori bin..."
+  cd executor/executor/bin || { echo "Direktori bin tidak ditemukan"; exit 1; }
+
+  echo "Mengaktifkan dan memulai ulang layanan t3rn-executor..."
+  sudo systemctl daemon-reload
+  sudo systemctl enable t3rn-executor.service
+  sudo systemctl restart t3rn-executor.service
+
+  echo "Proses selesai! Layanan t3rn-executor versi ${VERSION} telah diperbarui dan dijalankan."
 }
 
-# Menanyakan pilihan dari pengguna
+function check_logs() {
+  echo "Menampilkan log layanan t3rn-executor..."
+  sudo journalctl -u t3rn-executor.service -f --no-hostname -o cat
+}
+
+# Menu utama
 while true; do
-  show_menu
-  # Membaca input pilihan pengguna
-  read pilihan
+  echo ""
+  echo "Pilih opsi:"
+  echo "1. Update Node (t3rn-executor)"
+  echo "2. Cek Logs Layanan (t3rn-executor)"
+  echo "3. Keluar"
+  echo -n "Masukkan pilihan Anda (1/2/3): "
+  read CHOICE
 
-  # Mengeksekusi sesuai pilihan pengguna
-  case $pilihan in
+  case $CHOICE in
     1)
-      echo "Melanjutkan update node..."
-      
-      # Menghentikan layanan t3rn-executor sebelumnya (jika ada)
-      sudo systemctl stop t3rn-executor.service
-      if [ $? -ne 0 ]; then
-        echo "Gagal menghentikan layanan t3rn-executor"
-        exit 1
-      fi
-
-      # Menghapus folder executor lama (pastikan sudah benar-benar selesai)
-      rm -rf executor
-      if [ $? -ne 0 ]; then
-        echo "Gagal menghapus folder executor"
-        exit 1
-      fi
-
-      # Mengunduh versi terbaru dari executor dan mengekstraknya
-      curl -L -o executor-linux-v0.42.0.tar.gz https://github.com/t3rn/executor-release/releases/download/v0.42.0/executor-linux-v0.42.0.tar.gz
-      if [ $? -ne 0 ]; then
-        echo "Gagal mengunduh file executor"
-        exit 1
-      fi
-
-      # Mengecek apakah file sudah diunduh
-      if [ ! -f executor-linux-v0.42.0.tar.gz ]; then
-        echo "File executor-linux-v0.42.0.tar.gz tidak ditemukan!"
-        exit 1
-      fi
-
-      tar -xzvf executor-linux-v0.42.0.tar.gz
-      if [ $? -ne 0 ]; then
-        echo "Gagal mengekstrak file"
-        exit 1
-      fi
-      rm -f executor-linux-v0.41.0.tar.gz
-
-      # Masuk ke direktori bin untuk menyiapkan eksekutor
-      cd executor/executor/bin
-
-      # Mengaktifkan dan memulai layanan t3rn-executor
-      sudo systemctl daemon-reload
-      sudo systemctl enable t3rn-executor.service
-      sudo systemctl stop t3rn-executor.service
-      sudo systemctl start t3rn-executor.service
-      if [ $? -ne 0 ]; then
-        echo "Gagal memulai layanan t3rn-executor"
-        exit 1
-      fi
-
-      # Setelah update selesai, kembali ke menu pilihan
-      echo "Update selesai!"
-      continue
+      update_node
       ;;
-
     2)
-      echo "Menampilkan logs t3rn-executor..."
-      
-      # Menampilkan log dengan journalctl
-      sudo journalctl -u t3rn-executor.service -f --no-hostname -o cat
-      if [ $? -ne 0 ]; then
-        echo "Gagal menampilkan log"
-        exit 1
-      fi
+      check_logs
       ;;
-
     3)
-      echo "Setting Gas Fee"
-      
-      # Meminta input dari pengguna untuk nilai gas fee baru
-      echo -n "Masukkan nilai baru untuk EXECUTOR_MAX_L3_GAS_PRICE: "
-      read new_gas_price
-
-      # Menyunting file /etc/systemd/system/t3rn-executor.service untuk mengganti gas fee
-      sudo sed -i "s/Environment=\"EXECUTOR_MAX_L3_GAS_PRICE=[^\"]*\"/Environment=\"EXECUTOR_MAX_L3_GAS_PRICE=$new_gas_price\"/" /etc/systemd/system/t3rn-executor.service
-
-      # Memastikan perubahan berhasil
-      if [ $? -eq 0 ]; then
-        echo "Gas fee berhasil diubah menjadi $new_gas_price"
-      else
-        echo "Gagal mengubah gas fee."
-        exit 1
-      fi
-
-      # Reload daemon dan restart service
-      sudo systemctl daemon-reload
-      sudo systemctl enable t3rn-executor.service
-      sudo systemctl stop t3rn-executor.service
-      sudo systemctl start t3rn-executor.service
-      if [ $? -ne 0 ]; then
-        echo "Gagal memulai layanan t3rn-executor setelah perubahan gas fee"
-        exit 1
-      fi
-
-      # Kembali ke menu pilihan
-      continue
-      ;;
-
-    4)
-      echo "Hapus Node"
-
-      # Menghentikan layanan t3rn-executor sebelum menghapus
-      sudo systemctl stop t3rn-executor.service
-      if [ $? -ne 0 ]; then
-        echo "Gagal menghentikan layanan t3rn-executor"
-        exit 1
-      fi
-
-      # Menghapus folder executor
-      rm -rf /path/to/executor  # Pastikan path ke executor benar
-      if [ $? -ne 0 ]; then
-        echo "Gagal menghapus folder executor"
-        exit 1
-      fi
-
-      # Menghapus layanan systemd
-      sudo systemctl disable t3rn-executor.service
-      sudo rm -f /etc/systemd/system/t3rn-executor.service
-      if [ $? -ne 0 ]; then
-        echo "Gagal menghapus layanan systemd"
-        exit 1
-      fi
-
-      echo "Node telah berhasil dihapus!"
-      continue
-      ;;
-
-    5)
-      # Menghapus skrip updateExe.sh
-      rm updateExe.sh
-      if [ $? -ne 0 ]; then
-        echo "Gagal menghapus skrip updateExe.sh"
-        exit 1
-      fi
-
-      # Keluar dari script
-      echo "Keluar dari skrip..."
+      echo "Keluar dari skrip. Sampai jumpa!"
       exit 0
       ;;
-
     *)
-      echo "Pilihan tidak valid! Kembali ke menu..."
-      continue  # Kembali ke menu jika pilihan tidak valid
+      echo "Pilihan tidak valid! Silakan coba lagi."
       ;;
   esac
-
 done
-
-# Pesan terakhir sebelum skrip selesai
-echo "Dah ya, mo tidur"
